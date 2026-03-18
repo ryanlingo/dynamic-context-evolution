@@ -99,32 +99,23 @@
     </div>
   </section>
 
-  <!-- Abstract -->
+  <!-- The Problem -->
   <section class="section" style="padding-top: 1rem;">
     <div class="container is-max-desktop">
       <div class="columns is-centered">
         <div class="column is-four-fifths">
-          <h2 class="title is-3">Abstract</h2>
+          <h2 class="title is-3">The Problem</h2>
           <div class="content has-text-justified publication-body">
             <p>
-              Large language models produce repetitive output when prompted independently across many batches,
-              a phenomenon we term <em>cross-batch mode collapse</em>: the progressive loss of output diversity
-              when a language model is prompted repeatedly without access to its prior generations. Practitioners
-              have long mitigated this with ad hoc deduplication and seed rotation, but no principled framework exists.
+              Prompt an LLM to generate five ideas. Clear the conversation. Repeat 200 times.
+              You'd expect 1,000 distinct ideas. You won't get them. By batch 50, the same concepts
+              resurface with cosmetic variation. By batch 200, over a third of the output is
+              redundant&mdash;"smart water bottle" rephrased twenty different ways.
             </p>
             <p>
-              We introduce <strong>Dynamic Context Evolution (DCE)</strong>, comprising three mechanisms:
-              (1) <em>verbalized tail sampling</em>, which filters high-probability candidates via model self-assessment;
-              (2) <em>semantic memory</em>, which maintains a persistent embedding index to reject near-duplicates across batches; and
-              (3) <em>adaptive prompt evolution</em>, which reconstructs the generation prompt each batch using memory state
-              and rotating diversity strategies.
-            </p>
-            <p>
-              In experiments across three domains and two model families, a component ablation across 3 random seeds shows
-              that DCE achieves 0.0 &plusmn; 0.0% collapse versus 5.6 &plusmn; 2.0% for naive prompting, while producing
-              17&ndash;18 HDBSCAN clusters per seed versus naive's volatile 2&ndash;17. These results hold across sensitivity
-              sweeps and are validated with an independent embedding model, at approximately $0.50 per 1,000 candidates
-              using only standard API calls with no fine-tuning required.
+              We call this <strong>cross-batch mode collapse</strong>. Each API call starts with a blank
+              context window. The model has no memory of what it already said, so it keeps returning to
+              the same high-probability outputs. You're paying for 1,000 ideas but getting 50 ideas on repeat.
             </p>
           </div>
         </div>
@@ -132,19 +123,19 @@
     </div>
   </section>
 
-  <!-- Key Figures -->
-  <section class="section">
+  <!-- Watch It Happen -->
+  <section class="section" style="padding-top: 0;">
     <div class="container is-max-desktop">
       <div class="columns is-centered">
         <div class="column is-four-fifths">
-          <h2 class="title is-3">Key Results</h2>
-
           <div class="content">
             <figure>
               <img src="static/images/umap_collapse.gif"
-                alt="Animated UMAP comparison: Naive prompting clusters tightly over 200 batches while DCE maintains spread across the embedding space.">
+                alt="Animated UMAP comparison over 200 batches: naive prompting collapses into a tight cluster while DCE maintains broad, even coverage across the embedding space.">
               <figcaption>
-                UMAP embedding space over 200 batches. Naive prompting collapses; DCE maintains broad coverage.
+                Each dot is an idea, plotted in embedding space. <strong>Left:</strong> naive prompting&mdash;by
+                batch 100, new ideas land on top of old ones. The model is stuck in a rut.
+                <strong>Right:</strong> DCE&mdash;new ideas keep spreading outward, even at batch 200.
               </figcaption>
             </figure>
           </div>
@@ -152,13 +143,73 @@
           <div class="content">
             <figure>
               <img src="static/images/novelty_decay.gif"
-                alt="Animated batch novelty curve showing novelty decay over 200 batches.">
+                alt="Animated chart showing batch novelty declining over 200 batches as the model runs out of fresh territory.">
               <figcaption>
-                Batch novelty over time. Without DCE, novelty decays as the model revisits prior territory.
+                Batch novelty measures how different each new batch is from everything before it.
+                Without intervention, novelty falls off a cliff&mdash;the model runs out of fresh territory
+                and starts recycling.
               </figcaption>
             </figure>
           </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
+  <!-- The Solution -->
+  <section class="section" style="padding-top: 0;">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">The Solution</h2>
+          <div class="content has-text-justified publication-body">
+            <p>
+              DCE gives the model something it normally lacks: a memory of everything it has already generated,
+              and a prompt that adapts based on what's missing. Three mechanisms work together each batch:
+            </p>
+            <p>
+              <strong>Verbalized tail sampling</strong> asks the model to rate how obvious each idea is.
+              "Smart water bottle" scores 0.45&mdash;too predictable, rejected. "Shipping containers with walls
+              of compressed agricultural waste that decompose into fertilizer" scores 0.03&mdash;kept.
+            </p>
+            <p>
+              <strong>Semantic memory</strong> embeds every accepted idea into a vector database. Before a new
+              idea is accepted, the system checks: has something like this been said before? "Intelligent hydration
+              vessel" has different words than "smart water bottle" but nearly identical meaning&mdash;the memory
+              catches both.
+            </p>
+            <p>
+              <strong>Adaptive prompt evolution</strong> rewrites the generation prompt every batch. Early on,
+              it explores broadly. Later, it identifies which categories are thin&mdash;"only 2 ideas about thermal
+              regulation, 3 about ocean-degradable materials"&mdash;and steers the model toward the gaps.
+              By batch 190, the prompt tracks 47 categories and flags 3 dense regions to avoid.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Results -->
+  <section class="section" style="padding-top: 0;">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Results</h2>
+          <div class="content has-text-justified publication-body">
+            <p>
+              Across three domains, two model families, and three random seeds:
+              DCE achieves <strong>0.0% collapse</strong> versus 5.6% for naive prompting.
+              It consistently produces 17&ndash;18 distinct concept clusters, while naive prompting
+              fluctuates wildly between 2 and 17. No single component is enough&mdash;deduplication
+              alone doesn't prevent the model from generating the same ideas; prompt evolution alone doesn't
+              catch the near-duplicates that slip through. They have to work together.
+            </p>
+            <p>
+              The cost: roughly <strong>$0.50 per 1,000 candidates</strong>, using only standard API calls.
+              No fine-tuning. No custom architectures. Just a smarter prompt loop.
+            </p>
+          </div>
         </div>
       </div>
     </div>
