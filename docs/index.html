@@ -110,7 +110,7 @@
               Prompt an LLM to generate five ideas. Clear the conversation. Repeat 200 times.
               You'd expect 1,000 distinct ideas. You won't get them. By batch 50, the same concepts
               resurface with cosmetic variation. By batch 200, over a third of the output is
-              redundant&mdash;"smart water bottle" rephrased twenty different ways.
+              redundant. "Smart water bottle" rephrased twenty different ways.
             </p>
             <p>
               We call this <strong>cross-batch mode collapse</strong>. Each API call starts with a blank
@@ -133,9 +133,9 @@
               <img src="static/images/umap_collapse.gif"
                 alt="Animated UMAP comparison over 200 batches: naive prompting collapses into a tight cluster while DCE maintains broad, even coverage across the embedding space.">
               <figcaption>
-                Each dot is an idea, plotted in embedding space. <strong>Left:</strong> naive prompting&mdash;by
+                Each dot is an idea, plotted in embedding space. <strong>Left:</strong> naive prompting. By
                 batch 100, new ideas land on top of old ones. The model is stuck in a rut.
-                <strong>Right:</strong> DCE&mdash;new ideas keep spreading outward, even at batch 200.
+                <strong>Right:</strong> DCE. New ideas keep spreading outward, even at batch 200.
               </figcaption>
             </figure>
           </div>
@@ -146,7 +146,7 @@
                 alt="Animated chart showing batch novelty declining over 200 batches as the model runs out of fresh territory.">
               <figcaption>
                 Batch novelty measures how different each new batch is from everything before it.
-                Without intervention, novelty falls off a cliff&mdash;the model runs out of fresh territory
+                Without intervention, novelty falls off a cliff. The model runs out of fresh territory
                 and starts recycling.
               </figcaption>
             </figure>
@@ -169,19 +169,19 @@
             </p>
             <p>
               <strong>Verbalized tail sampling</strong> asks the model to rate how obvious each idea is.
-              "Smart water bottle" scores 0.45&mdash;too predictable, rejected. "Shipping containers with walls
-              of compressed agricultural waste that decompose into fertilizer" scores 0.03&mdash;kept.
+              "Smart water bottle" scores 0.45. Too predictable, rejected. "Shipping containers with walls
+              of compressed agricultural waste that decompose into fertilizer" scores 0.03. Kept.
             </p>
             <p>
               <strong>Semantic memory</strong> embeds every accepted idea into a vector database. Before a new
               idea is accepted, the system checks: has something like this been said before? "Intelligent hydration
-              vessel" has different words than "smart water bottle" but nearly identical meaning&mdash;the memory
+              vessel" has different words than "smart water bottle" but nearly identical meaning. The memory
               catches both.
             </p>
             <p>
               <strong>Adaptive prompt evolution</strong> rewrites the generation prompt every batch. Early on,
-              it explores broadly. Later, it identifies which categories are thin&mdash;"only 2 ideas about thermal
-              regulation, 3 about ocean-degradable materials"&mdash;and steers the model toward the gaps.
+              it explores broadly. Later, it identifies which categories are thin: "only 2 ideas about thermal
+              regulation, 3 about ocean-degradable materials." It steers the model toward the gaps.
               By batch 190, the prompt tracks 47 categories and flags 3 dense regions to avoid.
             </p>
           </div>
@@ -201,7 +201,7 @@
               Across three domains, two model families, and three random seeds:
               DCE achieves <strong>0.0% collapse</strong> versus 5.6% for naive prompting.
               It consistently produces 17&ndash;18 distinct concept clusters, while naive prompting
-              fluctuates wildly between 2 and 17. No single component is enough&mdash;deduplication
+              fluctuates wildly between 2 and 17. No single component is enough. Deduplication
               alone doesn't prevent the model from generating the same ideas; prompt evolution alone doesn't
               catch the near-duplicates that slip through. They have to work together.
             </p>
