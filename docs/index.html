@@ -139,25 +139,22 @@
 
           <div class="content">
             <figure>
-              <img src="static/images/edv_concept_quadrant.png"
-                alt="EDV filtering space: a 2x2 quadrant showing how VTS (depth) and deduplication (breadth) jointly filter candidates. Only surprising and far-from-memory ideas are accepted.">
+              <img src="static/images/umap_collapse.gif"
+                alt="Animated UMAP comparison: Naive prompting clusters tightly over 200 batches while DCE maintains spread across the embedding space.">
               <figcaption>
-                The EDV filtering space. Each candidate is scored on depth (how surprising, determined by VTS)
-                and breadth (how distant from memory, determined by deduplication). Only candidates that pass both
-                filters (top-right quadrant) contribute to EDV.
+                UMAP embedding space over 200 batches. Naive prompting (left) collapses into a tight cluster,
+                while DCE (right) maintains broad, even coverage across the concept space.
               </figcaption>
             </figure>
           </div>
 
           <div class="content">
             <figure>
-              <img src="static/images/edv_curves.png"
-                alt="EDV over 200 batches for all seven methods, split into panels by deduplication status. DCE maintains the highest EDV throughout.">
+              <img src="static/images/novelty_decay.gif"
+                alt="Animated batch novelty curve showing novelty decay over 200 batches.">
               <figcaption>
-                EDV over 200 batches (10-batch rolling averages; raw values shown faintly), split by deduplication status.
-                Left: methods without dedup all show declining EDV. Right: methods with dedup achieve 0% collapse;
-                DCE (thick line) maintains the highest EDV throughout, confirming that prompt evolution adds value
-                beyond dedup alone.
+                Batch novelty over time. Without DCE, novelty decays steadily as the model revisits
+                previously generated territory.
               </figcaption>
             </figure>
           </div>
