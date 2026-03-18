@@ -100,8 +100,37 @@
     </div>
   </section>
 
-  <!-- The Problem -->
+  <!-- Abstract -->
   <section class="section" style="padding-top: 1rem;">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified publication-body">
+            <p>
+              Large language models produce repetitive output when prompted independently across many
+              batches, a phenomenon we term <em>cross-batch mode collapse</em>: the progressive loss of
+              output diversity when a language model is prompted repeatedly without access to its prior
+              generations. We introduce Dynamic Context Evolution (DCE), comprising three mechanisms:
+              (1) <em>verbalized tail sampling</em>, which filters high-probability candidates via model
+              self-assessment; (2) <em>semantic memory</em>, which maintains a persistent embedding index
+              to reject near-duplicates across batches; and (3) <em>adaptive prompt evolution</em>, which
+              reconstructs the generation prompt each batch using memory state and rotating diversity
+              strategies. In experiments across three domains and two model families, DCE achieves
+              0.0 &plusmn; 0.0% collapse versus 5.6 &plusmn; 2.0% for naive prompting, while producing
+              17-18 HDBSCAN clusters per seed versus naive's volatile 2-17. These results hold across
+              sensitivity sweeps and are validated with an independent embedding model, at approximately
+              $0.50 per 1,000 candidates using only standard API calls, with no fine-tuning or custom
+              architectures required.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- The Problem -->
+  <section class="section" style="padding-top: 0;">
     <div class="container is-max-desktop">
       <div class="columns is-centered">
         <div class="column is-four-fifths">
@@ -111,11 +140,19 @@
               When you need thousands of synthetic training examples from an LLM, you prompt it in
               batches. But each API call starts with a blank context window. The model has no memory
               of what it already generated, so it keeps returning to the same high-probability outputs.
+              We call this <strong>cross-batch mode collapse</strong>.
             </p>
             <p>
-              We call this <strong>cross-batch mode collapse</strong>. Ask for 1,000 ideas and you'll
-              get the same 50 concepts rephrased over and over. By batch 200, over a third of the
-              output is redundant.
+              Consider a concrete experiment: prompt a model to generate five educational exam questions,
+              clear the conversation, and repeat 200 times. In the first 30 batches, you get genuinely
+              distinct questions spanning diverse topics. By batch 50, the same question structures
+              resurface with superficial variation. By batch 200, 34% of questions in the final 50
+              batches are near-duplicates of questions from the first 50.
+            </p>
+            <p>
+              This matters because diversity directly determines downstream utility. A classifier
+              trained on 1,000 paraphrases of 50 concepts learns 50 categories. A classifier trained
+              on 1,000 genuinely distinct concepts can learn far richer structure.
             </p>
           </div>
         </div>
@@ -123,7 +160,7 @@
     </div>
   </section>
 
-  <!-- Watch It Happen -->
+  <!-- Visualizations -->
   <section class="section" style="padding-top: 0;">
     <div class="container is-max-desktop">
       <div class="columns is-centered">
@@ -135,7 +172,8 @@
               <figcaption>
                 Each dot is a generated idea, plotted in embedding space over 200 batches.
                 <strong>Left:</strong> without DCE, the model keeps generating ideas in the same region.
-                <strong>Right:</strong> with DCE, ideas spread across the full concept space.
+                New ideas land on top of old ones.
+                <strong>Right:</strong> with DCE, ideas spread across the full concept space, even at batch 200.
               </figcaption>
             </figure>
           </div>
@@ -146,7 +184,8 @@
                 alt="Animated chart showing batch novelty declining over 200 batches as the model runs out of fresh territory.">
               <figcaption>
                 Batch novelty measures how different each new batch is from all previous outputs.
-                Without intervention, it declines steadily as the model runs out of fresh territory.
+                Without intervention, it declines steadily as the model runs out of fresh territory
+                and starts recycling the same concepts.
               </figcaption>
             </figure>
           </div>
@@ -155,7 +194,7 @@
     </div>
   </section>
 
-  <!-- The Solution -->
+  <!-- How DCE Works -->
   <section class="section" style="padding-top: 0;">
     <div class="container is-max-desktop">
       <div class="columns is-centered">
@@ -164,22 +203,34 @@
           <div class="content has-text-justified publication-body">
             <p>
               DCE gives the model a memory of everything it has already generated, and a prompt that
-              adapts based on what's missing. Three mechanisms run each batch:
+              adapts based on what's missing. Three mechanisms run together each batch:
             </p>
             <p>
               <strong>1. Verbalized tail sampling</strong> asks the model to rate how obvious each idea is.
-              Predictable ideas (like "smart water bottle") are filtered out. Only surprising, low-probability
-              ideas are kept.
+              The model estimates the probability that another LLM, given the same prompt, would produce
+              the same concept. Predictable ideas (like "smart water bottle," which scores 0.45) are
+              filtered out. Only surprising, low-probability ideas are kept (like "shipping containers
+              with walls of compressed agricultural waste," which scores 0.03).
             </p>
             <p>
-              <strong>2. Semantic memory</strong> stores every accepted idea as an embedding in a vector database.
-              Before a new idea is accepted, the system checks whether anything semantically similar already exists.
-              This catches duplicates even when they use completely different words.
+              <strong>2. Semantic memory</strong> stores every accepted idea as an embedding in a persistent
+              vector database. Before a new idea is accepted, the system computes its cosine similarity to
+              all stored ideas. This catches duplicates at the meaning level, not just the word level.
+              "Smart water bottle" and "intelligent hydration vessel" share few words but produce nearly
+              identical embeddings. The memory catches both.
             </p>
             <p>
-              <strong>3. Adaptive prompt evolution</strong> rewrites the generation prompt every batch based on
-              what the memory contains. It tracks which categories have too many ideas and which have too few,
-              then steers the model toward the gaps.
+              <strong>3. Adaptive prompt evolution</strong> rewrites the generation prompt every batch
+              based on the current state of memory. It injects three types of context: the most recently
+              accepted ideas (so the model knows what to avoid), the densest regions of the embedding space
+              (so it steers away from overrepresented areas), and the distribution of ideas across categories
+              (so it can target gaps). Four diversity strategies rotate across batches: gap targeting,
+              assumption inversion, cross-industry stimulus, and constraint variation.
+            </p>
+            <p>
+              Early batches prioritize broad exploration. Later batches shift to gap-filling, targeting
+              underrepresented categories. By batch 190, the prompt tracks 47 categories and flags 3
+              dense regions to avoid.
             </p>
           </div>
         </div>
@@ -196,17 +247,22 @@
           <div class="content has-text-justified publication-body">
             <p>
               <strong>DCE achieves 0.0% collapse</strong> versus 5.6% for naive prompting, tested across
-              three domains, two model families, and multiple random seeds. It consistently produces
-              17-18 distinct concept clusters where naive prompting produces anywhere from 2 to 17.
+              three domains (sustainable packaging, educational exam questions, creative writing prompts),
+              two model families (GPT-5-mini and Claude Haiku 4.5), and three random seeds. It consistently
+              produces 17-18 distinct concept clusters where naive prompting produces anywhere from 2 to 17.
             </p>
             <p>
-              No single component is sufficient on its own. Deduplication alone doesn't stop the model
-              from generating the same ideas. Prompt evolution alone doesn't catch near-duplicates.
-              The three mechanisms have to work together.
+              A seven-method ablation shows that no single component is sufficient. Deduplication alone
+              prevents near-duplicates from entering the output set, but doesn't stop the model from
+              <em>generating</em> the same ideas every batch. Prompt evolution alone steers the model toward
+              new territory, but can't catch the near-duplicates that slip through. The three mechanisms
+              are individually insufficient but jointly effective.
             </p>
             <p>
-              The cost is roughly <strong>$0.50 per 1,000 candidates</strong> using standard API calls.
-              No fine-tuning or custom architectures required.
+              Results are validated with an independent embedding model (all-MiniLM-L6-v2) and hold
+              across sensitivity sweeps of the VTS threshold and deduplication threshold. The cost is
+              roughly <strong>$0.50 per 1,000 candidates</strong> using standard API calls. No fine-tuning
+              or custom architectures required.
             </p>
           </div>
         </div>
