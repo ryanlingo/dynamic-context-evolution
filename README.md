@@ -7,17 +7,9 @@ Large language models produce repetitive output when prompted independently acro
 
 ## Architecture
 
-```
-┌─────────────┐     ┌─────────────────────┐     ┌──────────────────┐
-│   Generator  │────▶│  Verbalized Tail    │────▶│  Semantic Memory  │
-│  (LLM API)  │     │  Sampling (VTS)     │     │  (ChromaDB)       │
-└─────────────┘     └─────────────────────┘     └────────┬─────────┘
-       ▲                                                  │
-       │            ┌─────────────────────┐               │
-       └────────────│  Adaptive Prompt    │◀──────────────┘
-                    │  Evolution          │
-                    └─────────────────────┘
-```
+<p align="center">
+  <img src="docs/static/images/pipeline.gif" alt="DCE pipeline animation" width="100%">
+</p>
 
 Each batch: the generator produces candidates → VTS filters obvious ideas (self-assessed probability > 0.10) → semantic memory rejects near-duplicates (cosine similarity > 0.85) → prompt evolution rewrites the next prompt using memory state and a rotating diversity strategy.
 
