@@ -88,6 +88,12 @@
           </div>
         </div>
       </div>
+      <!-- Hero image -->
+      <div class="container is-max-desktop" style="margin-top: 2rem;">
+        <img src="static/images/pipeline.gif"
+          alt="Animated DCE pipeline: Prompt Constructor receives phase/strategy and memory feedback, sends prompt to LLM Generator, candidates flow through VTS Filter and Dedup Check into Semantic Memory, with a feedback loop back to the prompt."
+          style="width: 100%; border-radius: 8px;">
+      </div>
     </div>
   </section>
 
@@ -118,29 +124,6 @@
               sweeps and are validated with an independent embedding model, at approximately $0.50 per 1,000 candidates
               using only standard API calls with no fine-tuning required.
             </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Architecture -->
-  <section class="section">
-    <div class="container is-max-desktop">
-      <div class="columns is-centered">
-        <div class="column is-four-fifths">
-          <h2 class="title is-3">System Architecture</h2>
-          <div class="content">
-            <figure>
-              <img src="static/images/system_architecture.png"
-                alt="DCE system architecture: a left-to-right pipeline from Prompt Constructor through LLM Generator, VTS Filter, Dedup Check, and into Semantic Memory, with a feedback loop returning memory state to the prompt constructor.">
-              <figcaption>
-                The DCE generation loop. Each batch flows left to right: the prompt constructor assembles the prompt
-                from phase/strategy settings and semantic memory state, the LLM generates candidates, VTS and deduplication
-                filter them, and accepted ideas enter the memory bank. The feedback loop returns memory state
-                (recent ideas, dense regions, category gaps) to the prompt constructor for the next batch.
-              </figcaption>
-            </figure>
           </div>
         </div>
       </div>
