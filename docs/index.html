@@ -137,26 +137,27 @@
         <div class="column is-four-fifths">
           <h2 class="title is-3">Key Results</h2>
 
-          <div class="content">
-            <figure>
-              <img src="static/images/umap_collapse.gif"
-                alt="Animated UMAP comparison: Naive prompting clusters tightly over 200 batches while DCE maintains spread across the embedding space.">
-              <figcaption>
-                UMAP embedding space over 200 batches. Naive prompting (left) collapses into a tight cluster,
-                while DCE (right) maintains broad, even coverage across the concept space.
-              </figcaption>
-            </figure>
-          </div>
-
-          <div class="content">
-            <figure>
-              <img src="static/images/novelty_decay.gif"
-                alt="Animated batch novelty curve showing novelty decay over 200 batches.">
-              <figcaption>
-                Batch novelty over time. Without DCE, novelty decays steadily as the model revisits
-                previously generated territory.
-              </figcaption>
-            </figure>
+          <div class="columns is-centered">
+            <div class="column is-half">
+              <figure>
+                <img src="static/images/umap_collapse.gif"
+                  alt="Animated UMAP comparison: Naive prompting clusters tightly over 200 batches while DCE maintains spread across the embedding space."
+                  style="width: 100%; border-radius: 4px;">
+                <figcaption>
+                  UMAP embedding space over 200 batches. Naive prompting collapses; DCE maintains broad coverage.
+                </figcaption>
+              </figure>
+            </div>
+            <div class="column is-half">
+              <figure>
+                <img src="static/images/novelty_decay.gif"
+                  alt="Animated batch novelty curve showing novelty decay over 200 batches."
+                  style="width: 100%; border-radius: 4px;">
+                <figcaption>
+                  Batch novelty over time. Without DCE, novelty decays as the model revisits prior territory.
+                </figcaption>
+              </figure>
+            </div>
           </div>
 
         </div>
