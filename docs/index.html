@@ -140,7 +140,7 @@
               When you need thousands of synthetic training examples from an LLM, you prompt it in
               batches. But each API call starts with a blank context window. The model has no memory
               of what it already generated, so it keeps returning to the same high-probability outputs.
-              We call this <strong>cross-batch mode collapse</strong>.
+              We call this cross-batch mode collapse.
             </p>
             <p>
               Consider a concrete experiment: prompt a model to generate five educational exam questions,
@@ -246,7 +246,7 @@
           <h2 class="title is-3">Results</h2>
           <div class="content has-text-justified publication-body">
             <p>
-              <strong>DCE achieves 0.0% collapse</strong> versus 5.6% for naive prompting, tested across
+              DCE achieves 0.0% collapse versus 5.6% for naive prompting, tested across
               three domains (sustainable packaging, educational exam questions, creative writing prompts),
               two model families (GPT-5-mini and Claude Haiku 4.5), and three random seeds. It consistently
               produces 17-18 distinct concept clusters where naive prompting produces anywhere from 2 to 17.
@@ -261,7 +261,7 @@
             <p>
               Results are validated with an independent embedding model (all-MiniLM-L6-v2) and hold
               across sensitivity sweeps of the VTS threshold and deduplication threshold. The cost is
-              roughly <strong>$0.50 per 1,000 candidates</strong> using standard API calls. No fine-tuning
+              roughly $0.50 per 1,000 candidates using standard API calls. No fine-tuning
               or custom architectures required.
             </p>
           </div>
