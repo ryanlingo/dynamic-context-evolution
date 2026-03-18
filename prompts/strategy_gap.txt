@@ -1,0 +1,3 @@
+DIVERSITY STRATEGY — Gap Targeting:
+The following categories are underrepresented in our collection so far: {underrepresented_categories}.
+At least half of your ideas in this batch MUST target these underrepresented categories. Think deeply about what kinds of {domain} would fit these gaps. Explore subcategories and niches within these areas that haven't been covered.

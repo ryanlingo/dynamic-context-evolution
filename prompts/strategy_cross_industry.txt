@@ -1,0 +1,4 @@
+DIVERSITY STRATEGY — Cross-Industry Stimulus:
+Borrow mechanisms, materials, or business models from these unrelated industries: {stimulus_industries}.
+
+For example: What would a {domain} look like if designed by someone from {random_industry}? What packaging techniques from {another_industry} could be adapted? Import ideas freely across domain boundaries.

@@ -1,0 +1,20 @@
+You are {persona}. Generate exactly {batch_size} novel {domain} ideas.
+
+Each idea must be genuinely different from the others in this batch and from the examples shown below.
+
+{vts_instruction}
+
+{strategy_instruction}
+
+{phase_instruction}
+
+## Recently accepted ideas (avoid repetition):
+{recent_ideas}
+
+## Near-duplicates to explicitly avoid:
+{near_duplicates}
+
+## Current category distribution:
+{category_distribution}
+
+Generate {batch_size} ideas now. For each idea, provide a name, description, category, and your self-assessed probability score.

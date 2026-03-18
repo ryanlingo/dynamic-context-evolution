@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dynamic Context Evolution for Scalable Synthetic Data Generation</title>
+
+  <meta name="description"
+    content="DCE: A framework for generating large-scale diverse synthetic data from a single LLM without cross-batch mode collapse.">
+  <meta property="og:title" content="Dynamic Context Evolution for Scalable Synthetic Data Generation" />
+  <meta property="og:description"
+    content="A framework combining verbalized tail sampling, semantic memory, and adaptive prompt evolution to eliminate cross-batch mode collapse in LLM-based synthetic data generation." />
+  <meta property="og:type" content="website" />
+
+  <link rel="icon" type="image/png" href="static/images/favicon.png">
+
+  <!-- Bulma CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Noto+Sans:wght@400;500;700&display=swap"
+    rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Academicons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+
+  <link rel="stylesheet" href="static/css/index.css">
+</head>
+
+<body>
+
+  <!-- Hero / Title -->
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">
+              Dynamic Context Evolution for Scalable Synthetic Data Generation
+            </h1>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">
+                <a href="https://ryanlingo.com" target="_blank">Ryan Lingo</a><sup>1</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://scholar.google.com/citations?user=rajeev_chhajer" target="_blank">Rajeev Chhajer</a><sup>1</sup>
+              </span>
+            </div>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block"><sup>1</sup>Honda Research Institute, USA, Inc.</span>
+            </div>
+
+            <!-- Buttons -->
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <span class="link-block">
+                  <a class="button is-normal is-rounded is-light coming-soon-tooltip coming-soon">
+                    <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                    </span>
+                    <span>arXiv</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="https://github.com/ryanlingo/dynamic-context-evolution" target="_blank"
+                    class="button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-github"></i>
+                    </span>
+                    <span>Code</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="https://github.com/ryanlingo/dynamic-context-evolution/releases/tag/v1.0" target="_blank"
+                    class="button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fas fa-database"></i>
+                    </span>
+                    <span>Data</span>
+                  </a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Abstract -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified publication-body">
+            <p>
+              Large language models produce repetitive output when prompted independently across many batches,
+              a phenomenon we term <em>cross-batch mode collapse</em>: the progressive loss of output diversity
+              when a language model is prompted repeatedly without access to its prior generations. Practitioners
+              have long mitigated this with ad hoc deduplication and seed rotation, but no principled framework exists.
+            </p>
+            <p>
+              We introduce <strong>Dynamic Context Evolution (DCE)</strong>, comprising three mechanisms:
+              (1) <em>verbalized tail sampling</em>, which filters high-probability candidates via model self-assessment;
+              (2) <em>semantic memory</em>, which maintains a persistent embedding index to reject near-duplicates across batches; and
+              (3) <em>adaptive prompt evolution</em>, which reconstructs the generation prompt each batch using memory state
+              and rotating diversity strategies.
+            </p>
+            <p>
+              In experiments across three domains and two model families, a component ablation across 3 random seeds shows
+              that DCE achieves 0.0 &plusmn; 0.0% collapse versus 5.6 &plusmn; 2.0% for naive prompting, while producing
+              17&ndash;18 HDBSCAN clusters per seed versus naive's volatile 2&ndash;17. These results hold across sensitivity
+              sweeps and are validated with an independent embedding model, at approximately $0.50 per 1,000 candidates
+              using only standard API calls with no fine-tuning required.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Architecture -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">System Architecture</h2>
+          <div class="content">
+            <figure>
+              <img src="static/images/system_architecture.png"
+                alt="DCE system architecture: a left-to-right pipeline from Prompt Constructor through LLM Generator, VTS Filter, Dedup Check, and into Semantic Memory, with a feedback loop returning memory state to the prompt constructor.">
+              <figcaption>
+                The DCE generation loop. Each batch flows left to right: the prompt constructor assembles the prompt
+                from phase/strategy settings and semantic memory state, the LLM generates candidates, VTS and deduplication
+                filter them, and accepted ideas enter the memory bank. The feedback loop returns memory state
+                (recent ideas, dense regions, category gaps) to the prompt constructor for the next batch.
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Key Figures -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Key Results</h2>
+
+          <div class="content">
+            <figure>
+              <img src="static/images/edv_concept_quadrant.png"
+                alt="EDV filtering space: a 2x2 quadrant showing how VTS (depth) and deduplication (breadth) jointly filter candidates. Only surprising and far-from-memory ideas are accepted.">
+              <figcaption>
+                The EDV filtering space. Each candidate is scored on depth (how surprising, determined by VTS)
+                and breadth (how distant from memory, determined by deduplication). Only candidates that pass both
+                filters (top-right quadrant) contribute to EDV.
+              </figcaption>
+            </figure>
+          </div>
+
+          <div class="content">
+            <figure>
+              <img src="static/images/edv_curves.png"
+                alt="EDV over 200 batches for all seven methods, split into panels by deduplication status. DCE maintains the highest EDV throughout.">
+              <figcaption>
+                EDV over 200 batches (10-batch rolling averages; raw values shown faintly), split by deduplication status.
+                Left: methods without dedup all show declining EDV. Right: methods with dedup achieve 0% collapse;
+                DCE (thick line) maintains the highest EDV throughout, confirming that prompt evolution adds value
+                beyond dedup alone.
+              </figcaption>
+            </figure>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BibTeX -->
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title">BibTeX</h2>
+      <pre><code>@article{lingo2026dynamic,
+  title={Dynamic Context Evolution for Scalable Synthetic Data Generation},
+  author={Lingo, Ryan and Chhajer, Rajeev},
+  journal={arXiv preprint arXiv:XXXX.XXXXX},
+  year={2026}
+}</code></pre>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content has-text-centered">
+            <p>
+              This website template is borrowed from
+              <a href="https://nerfies.github.io" target="_blank">Nerfies</a>,
+              licensed under
+              <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank">CC BY-SA 4.0</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="static/js/index.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,48 @@
+# DCE Experiment Configuration
+
+generator:
+  model: "gpt-5-mini-2025-08-07"
+  batch_size: 5
+
+embeddings:
+  model: "text-embedding-3-small"
+  dimensions: 1536
+
+vts:
+  probability_threshold: 0.10
+
+memory:
+  similarity_threshold: 0.85
+  recent_ideas_in_prompt: 10
+  near_duplicates_shown: 5
+  saturation_multiplier: 1.5
+  chroma_db_path: "data/chroma_db"
+
+prompt_evolution:
+  strategy_count: 4  # gap, inversion, cross_industry, constraint
+  phase_threshold: 0.40  # first 40% exploration, rest gap-filling
+
+experiments:
+  domain: "sustainable packaging concepts"
+  total_batches: 200
+  checkpoint_interval: 10
+  output_dir: "data/raw"
+
+  exp1_collapse:
+    method: "naive"
+    total_batches: 200
+
+  exp2_comparison:
+    methods: ["naive", "vts_only", "vts_dedup", "dce"]
+    total_batches: 200
+
+  sensitivity:
+    splits: [0.20, 0.30, 0.40, 0.50, 0.60]
+    total_batches: 200
+
+  downstream:
+    training_size: 5000
+    model: "microsoft/deberta-base"
+    epochs: 3
+    batch_size: 16
+    learning_rate: 2.0e-5

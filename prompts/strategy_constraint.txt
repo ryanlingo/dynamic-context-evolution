@@ -1,0 +1,4 @@
+DIVERSITY STRATEGY — Constraint Variation:
+Apply the following constraint to your ideas: {constraint}.
+
+Previous batches did not have this constraint. Use it to force yourself into unfamiliar territory. The constraint should fundamentally change the KIND of ideas you generate, not just add a footnote to the same ideas.

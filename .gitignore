@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment variables
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Data and models
+*.pkl
+*.pt
+*.bin
+*.h5
+data/raw/
+data/processed/
+models/
+
+# Vector DB
+chroma_db/
+data/chroma_db/
+*.faiss
+*.index
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Logs and outputs
+*.log
+wandb/
+runs/
+outputs/
