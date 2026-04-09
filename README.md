@@ -1,6 +1,6 @@
 # Dynamic Context Evolution for Scalable Synthetic Data Generation
 
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
 
 Large language models produce repetitive output when prompted independently across many batches — a phenomenon we term **cross-batch mode collapse**. We introduce **Dynamic Context Evolution (DCE)**, comprising three mechanisms: (1) *verbalized tail sampling*, which filters high-probability candidates via model self-assessment; (2) *semantic memory*, which maintains a persistent embedding index to reject near-duplicates across batches; and (3) *adaptive prompt evolution*, which reconstructs the generation prompt each batch using memory state and rotating diversity strategies. DCE achieves 0.0% collapse versus 5.6% for naive prompting across three domains and two model families, at ~$0.50 per 1,000 candidates using only standard API calls.
@@ -79,13 +79,13 @@ Experiment data (raw generation logs and processed embeddings) is available on t
 @article{lingo2026dynamic,
   title={Dynamic Context Evolution for Scalable Synthetic Data Generation},
   author={Lingo, Ryan and Chhajer, Rajeev},
-  journal={arXiv preprint arXiv:XXXX.XXXXX},
+  journal={arXiv preprint arXiv:2604.07147},
   year={2026}
 }
 ```
 
 ## License
 
-This project is licensed under the Apache License 2.0 — see [LICENSE](LICENSE) for details.
+This project is licensed under the MIT License — see [LICENSE](LICENSE) for details.
 
 Copyright 2026 Honda Research Institute, USA, Inc.
